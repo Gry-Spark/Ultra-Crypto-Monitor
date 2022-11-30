@@ -1,3 +1,11 @@
+import streamlit as st
+import pandas as pd
+import binance.client
+from binance.client import Client
+import seaborn as sns
+
+
+
 
 import pandas as pd 
 import numpy as np  
@@ -18,11 +26,13 @@ from PySide2.QtWidgets import *
 import binance.client
 from binance.client import Client
 
-
+st.set_page_config(layout="wide")
 
 #Binance api
-Pkey = ''
-Skey = ''
+Pkey = '5tkCncueCdFgtWW7lb0mqa73pP88iPZgR0XTNIQPcVrYSi5rId6NwC2PVdegA0Ox'
+Skey = 'TuS5YKZBxCYglKVY560dORBASH99EHg7Eg8VHHS1NxpqmBXpJbOCkgB4KE2ytiJK'
+
+
 
 client = Client(api_key = Pkey, api_secret = Skey)
 price_chg_list  = []
@@ -44,7 +54,7 @@ intevral = Client.KLINE_INTERVAL_1HOUR ; depth = '4 days ago UTC+3'
 
 intevral_4 = Client.KLINE_INTERVAL_5MINUTE ; depth_4 = '2500 minutes ago UTC+3'
 
-tickers = ['BTCUSDT']
+tickers = ['fdfdfd','BTCUSDT', 'ETHUSDT']
 
 for ticker in tickers:
     try:
@@ -63,7 +73,7 @@ for ticker in tickers:
             df ["Trades_Count"] = pd.to_numeric(df["Trades_Count"])
             df ["asset"] = ticker
             avg_price = client.get_avg_price(symbol=ticker)
-            avg_price = round(float(avg_price['price']),2)
+            avg_price = round(float(avg_price['price']),2)                                                     
             #Buy/Sell volume per succend
             #df ["SELL_VOL"]    = (df.Volume -df.BUY_VOL)
             #df ["BTS"]    = round(df.BUY_VOL /3600,2)
@@ -75,8 +85,7 @@ for ticker in tickers:
                                 48) / taa.SUM(df['Volume'], 48)
             df['vwapsd'] = np.sqrt(taa.SMA(pow(df['Close']-df['mean'], 2), 48))
             df[f'vwap_zscore{48}'] = (df['Close']-df['mean']) / df['vwapsd']
-            df['mean']
-            df['vwapsd']
+
 
             #Price
             df ["Price_1H"] = round(df.Close.pct_change(1)*100,2).fillna(0) 
@@ -94,7 +103,7 @@ for ticker in tickers:
             TPS_1h = df["TPS_1h"][94]
             TPS_1h_Live = df["TPS_1h"][95]
             TPS_chg_1H = df[f'TPS_chg_1H'][94]
-            Score48_1h = df['vwap_zscore48'][94]
+            Score48_1h = df['vwap_zscore48'][94]               
             ATS_1h = df["ATS_1h"][94]
             ATS_chg_1H = df[f'ATS_chg_1H'][94]
             SortData_1h = df["SortData_1h"][94]
@@ -104,7 +113,7 @@ for ticker in tickers:
             TPS_1h_list.append(TPS_1h)
             TPS_1H_LIVE_LISt.append(TPS_1h_Live)
             TPS_chg_1H_list.append(TPS_chg_1H)
-            Score48_1h_list.append(Score48_1h)
+            Score48_1h_list.append(Score48_1h)            
             ATS_1h_list.append(ATS_1h)
             ATS_chg_1H_list.append(ATS_chg_1H)
             SortData_1h_list.append(SortData_1h)
@@ -144,23 +153,39 @@ for ticker in tickers:
 
 
                 dfc = pd.DataFrame()
-                dfc['coin_list_1h'] = coin_list_1h
-                dfc['price_chg_Live'] = price_chg_list  
-                dfc['TPS_1h'] = TPS_1h_list 
-                dfc['⚡️W48_Space5m⚡️'] = v48_Space_list
+                dfc['Coin'] = coin_list_1h
+                dfc['1H Live %'] = price_chg_list  
+                dfc['1hr_tps'] = TPS_1h_list 
+                dfc['⚡️W48 5min⚡️'] = v48_Space_list
                 dfc['Score48_1h'] = Score48_1h_list
                 dfc['TPS_chg_1H'] = TPS_chg_1H_list 
                 dfc['TPS_1H_LIVE'] = TPS_1H_LIVE_LISt
 
                 dfc['TPS_5m'] = MAHMAD_LISt
-                dfc['🎁Special TPS🎁'] = dfc['TPS_5m'] * dfc['TPS_1h']
+                dfc['🎁Special TPS🎁'] = dfc['⚡️W48_Space5m⚡️'] / dfc['TPS_1h']
                 dfc['ATS_1h_list'] = ATS_1h_list
                 dfc['ATS_chg_1H_list'] = ATS_chg_1H_list
 
                 
                 dfc['Score48_1h'] = Score48_1h_list
                 dfc['SortData_final1h'] = SortData_1h_list
+                
+                
 
+                df ["price_chg_Live"] = pd.to_numeric(df["price_chg_Live"])
+                df ["TPS_1h"] = pd.to_numeric(df["TPS_1h"])
+                df ["⚡️W48_Space5m⚡️"] = pd.to_numeric(df["⚡️W48_Space5m⚡️"])
+                df ["Score48_1h"] = pd.to_numeric(df["Score48_1h"])
+                df ["TPS_chg_1H"] = pd.to_numeric(df["TPS_chg_1H"])
+                df ["TPS_1H_LIVE"] = pd.to_numeric(df["TPS_1H_LIVE"])
+                df ["TPS_5m"] = pd.to_numeric(df["TPS_5m"])
+                df ["🎁Special TPS🎁"] = pd.to_numeric(df["🎁Special TPS🎁"])
+                df ["ATS_1h_list"] = pd.to_numeric(df["ATS_1h_list"])
+                df ["ATS_chg_1H_list"] = pd.to_numeric(df["ATS_chg_1H_list"])
+
+                df ["SortData_final1h"] = pd.to_numeric(df["SortData_final1h"])      
+                     
+              
                 #Price 4H
                 df_4 ["Price_4H"] = round(df_4.Close.pct_change(1)*100,2).fillna(0) 
                 #TPS
@@ -172,24 +197,33 @@ for ticker in tickers:
                 #Volume
                 df_4 ["Vol_chg_4H"] = round(df_4.Volume.pct_change(1)*100,2).fillna(0) 
                 df_4 ['SortData']  = df_4.TPS / df_4.Price_4H
-
-                #print(f'1 / {ticker}')
-                #
-                #print(f'Price: {avg_price} [1h: {df.Price_1H[1]}% / 4h: {df_4.Price_4H[1]}%]')
-                #
-                #print(f"TPS 'Trade Per Second' : {df.TPS_1h[1]}")   
-                #
-                #print(f"TPS Chg [1h:  {df.TPS_chg_1H[1]}% / 4h:  {df_4.Price_4H[1]}%]")
-                #
-                #print(f"ATS 'Average Trade Size': $ {df_4.ATS[1]}") 
-                #
-                #print(f"ATS Chg [1h:  {df.ATS_chg_1H[1]}% / 4h:  {df_4.ATS_chg_4H[1]}%]") 
-                #
-                #print(f" 4h Vol: $ {df_4.Volume[1]} [{df_4.Vol_chg_4H[1]}%] \n  ")
-            #df.to_csv(f'{ticker}.csv')
     except:
         pass
+                
+cm = sns.light_palette("green", as_cmap=True)
+# Function 
+def color_df(val):
+    return f'background-color: #ff6300'
+# Our example Dataset
 
-sort_coins = dfc.sort_values('TPS_1h', ascending=False).head(30)
-print(dfc.sort_values('TPS_1h', ascending=False).head(30))
+# Create Pandas DataFrame
+dff = pd.DataFrame(dfc)
+ 
+def color_negative_values(value): 
+   """
+   This function takes in values of dataframe 
+   if particular value is negative it is colored as redwhich implies loss
+   if value is greater than one it implies higher profit
+   """
+   if value < 0:
+       color = '#989ba2'
+   elif value > 0:
+       color = '#c9f35b'
+   else:
+       color = '#989ba2'
+   return f"color: {color}"
 
+# Using Style for the Dataframe
+
+expander_bar = st.expander("TPS")
+expander_bar.dataframe(dff.style.applymap(color_negative_values , subset=['price_chg_Live','TPS_1h','⚡️W48_Space5m⚡️','Score48_1h','TPS_chg_1H','TPS_1H_LIVE','TPS_5m','🎁Special TPS🎁','ATS_1h_list','ATS_chg_1H_list','SortData_final1h']).applymap(lambda x: 'font-size:23.2px; background-color: #131c25' ))

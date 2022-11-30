@@ -29,8 +29,8 @@ from binance.client import Client
 st.set_page_config(layout="wide")
 
 #Binance api
-Pkey = '5tkCncueCdFgtWW7lb0mqa73pP88iPZgR0XTNIQPcVrYSi5rId6NwC2PVdegA0Ox'
-Skey = 'TuS5YKZBxCYglKVY560dORBASH99EHg7Eg8VHHS1NxpqmBXpJbOCkgB4KE2ytiJK'
+Pkey = ''
+Skey = ''
 
 
 

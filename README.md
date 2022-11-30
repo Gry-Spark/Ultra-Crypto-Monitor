@@ -16,3 +16,7 @@ pip install python-binance
 
 . Finally .
 streamlit run DataStream_run.py 🎉
+
+
+
+![image](https://user-images.githubusercontent.com/110753007/204725304-e5a1ecd8-8656-4222-9d7d-0996ba0e4796.png)
